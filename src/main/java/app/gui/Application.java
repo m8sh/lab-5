@@ -66,7 +66,7 @@ public class Application {
             final JPanel logGradeCard = createLogGradeCard(frame, logGradeUseCase);
             final JPanel formTeamCard = createFormTeamCard(frame, formTeamUseCase);
             final JPanel joinTeamCard = createJoinTeamCard(frame, joinTeamUseCase);
-            final JPanel manageTeamCard = createManageTeamCard(frame, leaveTeamUseCase, getAverageGradeUseCase);
+            final JPanel manageTeamCard = createManageTeamCard(frame, leaveTeamUseCase, getAverageGradeUseCase, getTopGradeUseCase);
 
             cardPanel.add(defaultCard, "DefaultCard");
             cardPanel.add(getGradeCard, "GetGradeCard");
@@ -320,7 +320,7 @@ public class Application {
     // TODO Task 4: modify this method so that it takes in a getTopGradeUseCase
     //              Note: this will require you to update the code that calls this method.
     private static JPanel createManageTeamCard(JFrame jFrame, LeaveTeamUseCase leaveTeamUseCase,
-                                               GetAverageGradeUseCase getAverageGradeUseCase) {
+                                               GetAverageGradeUseCase getAverageGradeUseCase, GetTopGradeUseCase getTopGradeUseCase) {
 
 
         final JPanel theCard = new JPanel();
@@ -355,7 +355,26 @@ public class Application {
                     JOptionPane.showMessageDialog(jFrame, ex.getMessage());
                 }
             }
+
         });
+
+        getTopGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final String course = courseField.getText();
+
+                try {
+
+                    final float top = getTopGradeUseCase.getTopGrade(course);
+                    JOptionPane.showMessageDialog(jFrame, "Top Grade: " + top);
+                    courseField.setText("");
+                }
+                catch (JSONException ex) {
+                    JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+                }
+            }
+        });
+
 
 
         // TODO Task 4: Add action listener for getTopGrade button, follow example of getAverageButton
@@ -381,8 +400,10 @@ public class Application {
         theCard.add(new JLabel("The course you want to calculate the team average for:"));
         theCard.add(courseField);
         theCard.add(getAverageButton);
+        theCard.add(getTopGradeButton);
         theCard.add(leaveTeamButton);
         theCard.add(resultLabel);
+
         return theCard;
 
     }
