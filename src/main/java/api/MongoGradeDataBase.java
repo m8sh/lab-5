@@ -247,27 +247,38 @@ public class MongoGradeDataBase implements GradeDataBase {
     }
 
     @Override
-    // TODO Task 3b: Implement this method
-    //       Hint: Read the Grade API documentation for getMyTeam (link below) and refer to the above similar
-    //             methods to help you write this code (copy-and-paste + edit as needed).
-    //             https://www.postman.com/cloudy-astronaut-813156/csc207-grade-apis-demo/folder/isr2ymn/get-my-team
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         final Request request = new Request.Builder()
                 .url(String.format("%s/team", API_URL))
-                .method("GET", null)
+                .method( "GET", null)
                 .addHeader(TOKEN, getAPIToken())
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
 
-        final Response response;
-        final JSONObject responseBody;
+            final JSONObject team = responseBody.getJSONObject("team");
+            final JSONArray membersArray = team.getJSONArray("members");
+            final String[] members = new String[membersArray.length()];
+            for (int i = 0; i < membersArray.length(); i++) {
+                members[i] = membersArray.getString(i);
+            }
+            final String name = team.getString("name");
+            System.out.println(name);
+            System.out.println(members);
 
-        // TODO Task 3b: Implement the logic to get the team information
-        // HINT 1: Look at the formTeam method to get an idea on how to parse the response
-        // HINT 2: You may find it useful to just initially print the contents of the JSON
-        //         then work on the details of how to parse it.
-        return null;
-    }
+            // HINT 1: Look at the formTeam method to get an idea on how to parse the response
+            // HINT 2: You may find it useful to just initially print the contents of the JSON
+            //         then work on the details of how to parse it.
+            Team returnTeam = new Team(name, members);
+            return returnTeam;
+        }
+        catch (IOException | JSONException event) {
+            throw new RuntimeException(event);
+        }
+        }
+
 }
