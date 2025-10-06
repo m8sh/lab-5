@@ -21,12 +21,7 @@ import org.json.JSONException;
 import api.MongoGradeDataBase;
 import app.Config;
 import entity.Grade;
-import usecase.FormTeamUseCase;
-import usecase.GetAverageGradeUseCase;
-import usecase.GetGradeUseCase;
-import usecase.JoinTeamUseCase;
-import usecase.LeaveTeamUseCase;
-import usecase.LogGradeUseCase;
+import usecase.*;
 
 /**
  * GUI class to run the GUI for the Grade App.
@@ -55,6 +50,7 @@ public class Application {
         final JoinTeamUseCase joinTeamUseCase = config.joinTeamUseCase();
         final LeaveTeamUseCase leaveTeamUseCase = config.leaveTeamUseCase();
         final GetAverageGradeUseCase getAverageGradeUseCase = config.getAverageGradeUseCase();
+        final GetTopGradeUseCase getTopGradeUseCase = config.getTopGradeUseCase();
 
         // this is the code that runs to set up our GUI
         SwingUtilities.invokeLater(() -> {
@@ -325,17 +321,22 @@ public class Application {
     //              Note: this will require you to update the code that calls this method.
     private static JPanel createManageTeamCard(JFrame jFrame, LeaveTeamUseCase leaveTeamUseCase,
                                                GetAverageGradeUseCase getAverageGradeUseCase) {
+
+
         final JPanel theCard = new JPanel();
         theCard.setLayout(new GridLayout(ROWS, COLS));
         final JTextField courseField = new JTextField(20);
         // make a separate line.
         final JButton getAverageButton = new JButton("Get Average Grade");
         // TODO Task 4: Add another button for "Get Top Grade" (check the getAverageButton for example)
+        final JButton getTopGradeButton = new JButton("Get Top Grade");
+
 
         final JButton leaveTeamButton = new JButton("Leave Team");
         final JLabel resultLabel = new JLabel();
 
         getAverageButton.addActionListener(new ActionListener() {
+
             /**
              * Invoked when an action occurs.
              *
@@ -355,6 +356,7 @@ public class Application {
                 }
             }
         });
+
 
         // TODO Task 4: Add action listener for getTopGrade button, follow example of getAverageButton
 
